@@ -27,3 +27,18 @@ jobs:
 
       - name: Run Tests
         run: python manage.py test
+deploy:
+    needs: build-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: cicdapp
+
+      - name: Simulate Deployment
+        run: |
+          mkdir cicdapp
+          unzip django_app.zip -d cicdapp
+          echo "Deployment stage complete"
