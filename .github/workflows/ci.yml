@@ -1,0 +1,31 @@
+name: Django CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-test-deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Activate Virtual Env
+        run: |
+          venv\Scripts\activate
+
+      - name: Install Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run Migrations
+        run: python manage.py migrate
+
+      - name: Run Tests
+        run: python manage.py test
+
+      - name: Restart Django Server
+        run: |
+          taskkill /F /IM python.exe || echo "No server running"
+          start /B python manage.py runserver 0.0.0.0:8000
